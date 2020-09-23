@@ -21,6 +21,7 @@ It works by searching for specific keywords of PC Hardware on the biggest Méxic
 - Intercompras.com
 
 <img align="left" width="50" height="50" src="./img/icon.png" alt="UML Icon" border="0">
+
 ## UML
 ![UML_Classes](./img/UML_Classes.png)
 
