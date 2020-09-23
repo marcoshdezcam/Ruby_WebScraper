@@ -1,9 +1,9 @@
 # Web scraper for PC Hardware prices
 
-> This is a simple web scraper to search for the best price of PC Hardware parts on websites that ship to México.
+> This is a simple web scraper to search for the best price of PC Hardware parts on websites that sell and ship to México.
 
-It works by searching the best price for a specific product on the 10 biggest websites (shipping to México):
-- Amazon.com.mx
+It works by searching for specific keywords of PC Hardware on the biggest México's websites. Then, it will show the best matches with the lowest prices available.
+
 - MercadoLibre.com.mx
 - Cyberpuerta.mx
 - PCHMayoreo.com
@@ -12,14 +12,24 @@ It works by searching the best price for a specific product on the 10 biggest we
 - Grupodecme.com
 - Dimercom.mx
 - Digitalife.com.mx
-- Pcel.com
+- PCel.com
+- DDTech.mx
+- Zegucom.com.mx
+- PCMig.com.mx
+- HighPro.com.mx
+- PCDigital.com.mx
+- Intercompras.com
+
+<img align="left" width="50" height="50" src="./img/icon.png" alt="UML Icon" border="0">
+## UML
+![UML_Classes](./img/UML_Classes.png)
 
 ## 🔧 Built With
 
 - Ruby
 - Gitflow workflow
-- [Nokogiri](https://github.com/sparklemotion/nokogiri)
-- [Rspec](https://rspec.info/)
+- [Mechanize](https://github.com/sparklemotion/mechanize) 	* Includes Nokogiri as dependency
+- [RSpec](https://rspec.info/)
 
 ## 🔴 Live Demo
 
