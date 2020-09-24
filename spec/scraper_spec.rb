@@ -13,4 +13,11 @@ describe Scraper do
       expect(scraper.keywords.empty?).to be false
     end
   end
+  context %(When a search is done) do
+    it %( creates a Mechanize object on the results variable) do
+      scraper = Scraper.new('RAM 8GB')
+      scraper.search
+      expect(scraper.results).to be_instance_of(Mechanize)
+    end
+  end
 end
