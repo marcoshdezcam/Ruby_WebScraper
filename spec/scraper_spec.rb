@@ -35,4 +35,10 @@ describe Scraper do
     it { expect(scraper.pcdigital).to be(true).or be(false) }
     it { expect(scraper.intercompras).to be(true).or be(false) }
   end
+  describe %(#show_distributors) do
+    it %(returns the hash of distributors) do
+      scraper = Scraper.new('RAM 8GB')
+      expect(scraper.show_distributors).to be(scraper.distributors)
+    end
+  end
 end
