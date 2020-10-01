@@ -37,4 +37,9 @@ describe Scraper do
       expect(scraper.show_distributors).to be(scraper.distributors)
     end
   end
+  describe %(#create_listing) do
+    it %(creates a listing object with @results) do
+      expect(scraper.create_listing).to be_instance_of(Listing)
+    end
+  end
 end
