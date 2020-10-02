@@ -17,5 +17,9 @@ describe Listing do
     it %(returns a product object) do
       expect(listing.find_cheapest).to be_instance_of(Product)
     end
+    it %(returns the cheapest product) do
+      cheapest = listing.find_cheapest
+      expect(cheapest.price).to eq('$850')
+    end
   end
 end
