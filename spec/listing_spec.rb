@@ -13,4 +13,9 @@ describe Listing do
       expect(listing.products.first).to be_instance_of(Product)
     end
   end
+  describe %(#find_cheapest) do
+    it %(returns a product object) do
+      expect(listing.find_cheapest).to be_instance_of(Product)
+    end
+  end
 end
