@@ -22,4 +22,9 @@ describe Listing do
       expect(cheapest.price).to eq('$850')
     end
   end
+  describe %(#show_listing) do
+    it %(returns the results with the proper format) do
+      expect(listing.show_listing).to output.to_stdout
+    end
+  end
 end
