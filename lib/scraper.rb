@@ -25,9 +25,29 @@ class Scraper
     }
   end
 
-  def search; end
+  def search
+    mercadolibre
+    binding.pry
+  end
 
-  def mercadolibre; end
+  def mercadolibre
+    agent = Mechanize.new
+    models = []
+    prices = []
+    urls = []
+    webpage = agent.get(distributors[:mercadolibre])
+    search_form = webpage.forms.first
+    search_form.as_word = @keywords
+    results_page = agent.submit(search_form)
+    results_page.css('div.ui-search-result__wrapper').each do |item|
+      models << item.css('h2.ui-search-item__title').text
+      prices << item.css('span.ui-search-price__part').first.text
+      urls << item.css('a').first['href']
+    end
+    products = models.zip(prices, urls)
+    @results = products
+    products.empty? ? false : true
+  end
 
   def cyberpuerta; end
 
