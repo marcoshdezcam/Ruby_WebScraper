@@ -1,3 +1,4 @@
+require_relative '../config/credentials.rb'
 require 'mechanize'
 require 'pry'
 
@@ -28,6 +29,7 @@ class Scraper
   def search
     mercadolibre
     cyberpuerta
+    pchmayoreo
   end
 
   def mercadolibre
@@ -68,7 +70,18 @@ class Scraper
     products.empty? ? false : true
   end
 
-  def pchmayoreo; end
+  def pchmayoreo
+    agent = Mechanize.new
+    models = []
+    prices = []
+    urls = []
+    webpage = agent.get(distributors[:pchmayoreo])
+    login_page = webpage.link_with(text: 'Iniciar Sesión').click
+    login_form = login_page.form_with(id: 'login-form')
+    login_form.field_with(id: 'email').value = ENV['pch_user_id']
+    login_form.field_with(id: 'pass').value = ENV['pch_pass_key']
+    client_homepage = login_form.submit
+  end
 
   def mipc; end
 
