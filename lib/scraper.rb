@@ -30,6 +30,7 @@ class Scraper
     mercadolibre
     cyberpuerta
     pchmayoreo
+    binding.pry
   end
 
   def mercadolibre
@@ -81,6 +82,17 @@ class Scraper
     login_form.field_with(id: 'email').value = ENV['pch_user_id']
     login_form.field_with(id: 'pass').value = ENV['pch_pass_key']
     client_homepage = login_form.submit
+    search_form = client_homepage.form_with(id: 'search_mini_form')
+    search_form.q = @keywords
+    results_page = agent.submit(search_form)
+    results_page.css('div.item-inner').each do |item|
+      models << item.css('h2.product-name').text
+      prices << item.css('span.price').text
+      urls << item.css('h2.product-name a').first['href']
+    end
+    products = models.zip(prices, urls)
+    @results << products
+    products.empty? ? false : true
   end
 
   def mipc; end
