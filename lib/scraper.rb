@@ -3,10 +3,11 @@ require 'mechanize'
 require 'pry'
 
 class Scraper
-  attr_reader :results, :keywords, :distributors
+  attr_reader :agent, :results, :keywords, :distributors
 
   def initialize(keywords)
-    @results = []
+    @agent = Mechanize.new
+    @results = [['Product name'], ['Price'], ['URL']]
     @keywords = keywords
     @distributors = {
       mercadolibre: 'https://www.mercadolibre.com.mx/',
@@ -30,52 +31,33 @@ class Scraper
     mercadolibre
     cyberpuerta
     pchmayoreo
-    binding.pry
   end
 
   def mercadolibre
-    agent = Mechanize.new
-    models = []
-    prices = []
-    urls = []
-    webpage = agent.get(distributors[:mercadolibre])
+    webpage = @agent.get(distributors[:mercadolibre])
     search_form = webpage.forms.first
     search_form.as_word = @keywords
     results_page = agent.submit(search_form)
     results_page.css('div.ui-search-result__wrapper').each do |item|
-      models << item.css('h2.ui-search-item__title').text
-      prices << item.css('span.ui-search-price__part').first.text
-      urls << item.css('a').first['href']
+      @results[0] << item.css('h2.ui-search-item__title').text
+      @results[1] << item.css('span.ui-search-price__part').first.text
+      @results[2] << item.css('a').first['href']
     end
-    products = models.zip(prices, urls)
-    @results << products
-    products.empty? ? false : true
   end
 
   def cyberpuerta
-    agent = Mechanize.new
-    models = []
-    prices = []
-    urls = []
-    webpage = agent.get(distributors[:cyberpuerta])
+    webpage = @agent.get(distributors[:cyberpuerta])
     search_form = webpage.form('search')
     search_form.searchparam = @keywords
     results_page = agent.submit(search_form)
     results_page.css('div.emproduct').each do |item|
-      models << item.css('a.emproduct_right_title').text
-      prices << item.css('label.price').text
-      urls << item.css('a.emproduct_right_title').first['href']
+      @results[0] << item.css('a.emproduct_right_title').text
+      @results[1] << item.css('label.price').text
+      @results[2] << item.css('a.emproduct_right_title').first['href']
     end
-    products = models.zip(prices, urls)
-    @results << products
-    products.empty? ? false : true
   end
 
   def pchmayoreo
-    agent = Mechanize.new
-    models = []
-    prices = []
-    urls = []
     webpage = agent.get(distributors[:pchmayoreo])
     login_page = webpage.link_with(text: 'Iniciar Sesión').click
     login_form = login_page.form_with(id: 'login-form')
@@ -86,13 +68,10 @@ class Scraper
     search_form.q = @keywords
     results_page = agent.submit(search_form)
     results_page.css('div.item-inner').each do |item|
-      models << item.css('h2.product-name').text
-      prices << item.css('span.price').text
-      urls << item.css('h2.product-name a').first['href']
+      @results[0] << item.css('h2.product-name').text
+      @results[1] << item.css('span.price').text
+      @results[2] << item.css('h2.product-name a').first['href']
     end
-    products = models.zip(prices, urls)
-    @results << products
-    products.empty? ? false : true
   end
 
   def mipc; end
