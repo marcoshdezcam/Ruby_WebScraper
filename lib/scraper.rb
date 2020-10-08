@@ -31,6 +31,7 @@ class Scraper
     mercadolibre
     cyberpuerta
     pchmayoreo
+    mipc
   end
 
   def mercadolibre
@@ -74,7 +75,17 @@ class Scraper
     end
   end
 
-  def mipc; end
+  def mipc
+    webpage = agent.get(distributors[:mipc])
+    search_form = webpage.form_with(id: 'search_mini_form')
+    search_form.q = @keywords
+    results_page = agent.submit(search_form)
+    results_page.css('li.product-item').each do |item|
+      @results[0] << item.css('h5.product-item-name').text
+      @results[1] << item.at('[data-price-type="finalPrice"]').text
+      @results[2] << item.css('a.product-item-link').first['href']
+    end
+  end
 
   def orbitalstore; end
 
