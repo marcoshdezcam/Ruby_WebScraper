@@ -14,7 +14,7 @@ class Scraper
       cyberpuerta: 'https://www.cyberpuerta.mx/',
       pchmayoreo: 'https://www.pchmayoreo.com/',
       mipc: 'https://mipc.com.mx/',
-      oribalstore: 'https://www.orbitalstore.mx/',
+      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=',
       grupodecme: 'https://grupodecme.com/',
       digitalife: 'https://www.digitalife.com.mx/',
       pcel: 'https://pcel.com/',
@@ -32,6 +32,7 @@ class Scraper
     cyberpuerta
     pchmayoreo
     mipc
+    orbitalstore
   end
 
   def mercadolibre
@@ -87,7 +88,14 @@ class Scraper
     end
   end
 
-  def orbitalstore; end
+  def orbitalstore
+    results_page = agent.get(distributors[:oribalstore] + @keywords)
+    results_page.css('div.item').each do |item|
+      @results[0] << item.css('a.title').text
+      @results[1] << item.css('div.played').text
+      @results[2] << item.css('a.title').first['href']
+    end
+  end
 
   def grupodecme; end
 
