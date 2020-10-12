@@ -15,7 +15,7 @@ class Scraper
       pchmayoreo: 'https://www.pchmayoreo.com/',
       mipc: 'https://mipc.com.mx/',
       oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=',
-      grupodecme: 'https://grupodecme.com/',
+      grupodecme: 'https://grupodecme.com',
       digitalife: 'https://www.digitalife.com.mx/',
       pcel: 'https://pcel.com/',
       ddtech: 'https://ddtech.mx/',
@@ -33,6 +33,7 @@ class Scraper
     pchmayoreo
     mipc
     orbitalstore
+    grupodecme
   end
 
   def mercadolibre
@@ -97,7 +98,16 @@ class Scraper
     end
   end
 
-  def grupodecme; end
+  def grupodecme
+    webpage = agent.get(distributors[:grupodecme])
+    webpage.forms.first.q = @keywords
+    results_page = webpage.forms.first.submit
+    results_page.css('a.product-grid-item').each do |item|
+      @results[0] << item.css('a.product-grid p').text
+      @results[1] << item.css('span.visually-hidden')[1].text
+      @results[2].push(distributors[:grupodecme] + item['href'])
+    end
+  end
 
   def digitalife; end
 
