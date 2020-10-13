@@ -196,7 +196,16 @@ class Scraper
     end
   end
 
-  def intercompras; end
+  def intercompras
+    webpage = agent.get(distributors[:intercompras])
+    webpage.forms.first.keywords = @keywords
+    results_page = webpage.forms.first.submit
+    results_page.css('div.divContentProductInfo').each do |item|
+      @results[0] << item.css('a.spanProductListInfoTitle').text
+      @results[1] << item.css('div.divProductListPrice').text
+      @results[2] << item.css('a').first['href']
+    end
+  end
 
   def show_distributors; end
 
