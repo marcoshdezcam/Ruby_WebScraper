@@ -182,7 +182,19 @@ class Scraper
     end
   end
 
-  def pcdigital; end
+  def pcdigital
+    chrome.navigate.to distributors[:pcdigital]
+    input = chrome.find_element(name: 'search')
+    input.send_keys @keywords
+    chrome.find_element(class: 'button-search').click
+    results_page = agent.get(chrome.current_url)
+    chrome.quit
+    results_page.css('div.product').each do |item|
+      @results[0] << item.css('div.name').text
+      @results[1] << item.css('span.price-new').text
+      @results[2] << item.css('div.name a').first['href']
+    end
+  end
 
   def intercompras; end
 
