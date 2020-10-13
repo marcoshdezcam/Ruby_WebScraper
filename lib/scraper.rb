@@ -40,6 +40,7 @@ class Scraper
     grupodecme
     digitalife
     pcel
+    zegucom
   end
 
   def mercadolibre
@@ -148,7 +149,16 @@ class Scraper
     end
   end
 
-  def zegucom; end
+  def zegucom
+    webpage = agent.get(distributors[:zegucom])
+    webpage.forms.first.cons = @keywords
+    results_page = webpage.forms.first.submit
+    results_page.css('div.search-result').each do |item|
+      @results[0] << item.css('div.result-description a').text
+      @results[1] << item.css('span.result-price-search').text
+      @results[2] << distributors[:zegucom] + item.css('a')[1]['href']
+    end
+  end
 
   def pcmig; end
 
