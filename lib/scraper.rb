@@ -160,7 +160,16 @@ class Scraper
     end
   end
 
-  def pcmig; end
+  def pcmig
+    webpage = agent.get(distributors[:pcmig])
+    webpage.forms.first.s = @keywords
+    results_page = webpage.forms.first.submit
+    results_page.css('div.product-wrapper').each do |item|
+      @results[0] << item.css('h2.product-name').first.text
+      @results[1] << item.css('span.woocommerce-Price-amount').first.text
+      @results[2] << item.css('a').first['href']
+    end
+  end
 
   def highpro; end
 
