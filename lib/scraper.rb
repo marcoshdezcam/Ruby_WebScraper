@@ -35,6 +35,7 @@ class Scraper
     orbitalstore
     grupodecme
     digitalife
+    pcel
   end
 
   def mercadolibre
@@ -62,11 +63,13 @@ class Scraper
   def pchmayoreo
     webpage = agent.get(distributors[:pchmayoreo])
     login_page = webpage.link_with(text: 'Iniciar Sesión').click
-    login_page.form_with(id: 'login-form').field_with(id: 'email').value = ENV['pch_user_id']
-    login_page.form_with(id: 'login_form').field_with(id: 'pass').value = ENV['pch_pass_key']
-    client_homepage = login_page.form_with(id: 'login_form').submit
-    client_homepage.form_with(id: 'search_mini_form').q = @keywords
-    results_page = client_homepage.form_with(id: 'search_mini_form').submit
+    login_form = login_page.form_with(id: 'login-form')
+    login_form.field_with(id: 'email').value = ENV['pch_user_id']
+    login_form.field_with(id: 'pass').value = ENV['pch_pass_key']
+    client_homepage = login_form.submit
+    search_form = client_homepage.form_with(id: 'search_mini_form')
+    search_form.q = @keywords
+    results_page = agent.submit(search_form)
     results_page.css('div.item-inner').each do |item|
       @results[0] << item.css('h2.product-name').text
       @results[1] << item.css('span.price').text
@@ -116,7 +119,10 @@ class Scraper
     end
   end
 
-  def pcel; end
+  def pcel
+    webpage = agent.get(distributors[:pcel])
+    binding.pry
+  end
 
   def ddtech; end
 
