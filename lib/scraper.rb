@@ -21,6 +21,13 @@ class Scraper
       ddtech: 'https://ddtech.mx/', zegucom: 'https://www.zegucom.com.mx/',
       pcmig: 'https://pcmig.com.mx/', highpro: 'https://highpro.com.mx/',
       pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/'
+      pcel: 'https://pcel.com/index.php?route=product/search',
+      ddtech: 'https://ddtech.mx/',
+      zegucom: 'https://www.zegucom.com.mx/',
+      pcmig: 'https://pcmig.com.mx/',
+      highpro: 'https://highpro.com.mx/',
+      pcdigital: 'https://www.pcdigital.com.mx/',
+      intercompras: 'https://intercompras.com/'
     }
   end
 
@@ -33,7 +40,6 @@ class Scraper
     grupodecme
     digitalife
     pcel
-    ddtech
   end
 
   def mercadolibre
@@ -100,7 +106,7 @@ class Scraper
     webpage.forms.first.q = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('a.product-grid-item').each do |item|
-      @results[0] << item.css('a.product-grid p').text
+      @results[0] << item.css('p').text
       @results[1] << item.css('span.visually-hidden')[1].text
       @results[2] << (distributors[:grupodecme] + item['href'])
     end
@@ -131,16 +137,7 @@ class Scraper
     end
   end
 
-  def ddtech
-    webpage = agent.get(distributors[:ddtech])
-    webpage.forms.first.search = @keywords
-    results_page = webpage.forms.first.submit
-    results_page.css('div.item').each do |item|
-      @results[0] << item.css('a').text
-      @results[1] << item.css('span.price').text
-      @results[2] << item.css('a').first['href']
-    end
-  end
+  def ddtech; end
 
   def zegucom; end
 
