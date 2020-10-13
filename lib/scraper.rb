@@ -1,12 +1,14 @@
 require_relative '../config/credentials.rb'
 require 'mechanize'
 require 'pry'
+require 'selenium-webdriver'
 
 class Scraper
-  attr_reader :agent, :results, :keywords, :distributors
+  attr_reader :agent, :chrome, :results, :keywords, :distributors
 
   def initialize(keywords)
     @agent = Mechanize.new
+    @chrome = Selenium::WebDriver.for :chrome
     @results = [['Product name'], ['Price'], ['URL']]
     @keywords = keywords
     @distributors = {
@@ -17,7 +19,7 @@ class Scraper
       oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=',
       grupodecme: 'https://grupodecme.com',
       digitalife: 'https://www.digitalife.com.mx/',
-      pcel: 'https://pcel.com/',
+      pcel: 'https://pcel.com/index.php?route=product/search',
       ddtech: 'https://ddtech.mx/',
       zegucom: 'https://www.zegucom.com.mx/',
       pcmig: 'https://pcmig.com.mx/',
@@ -120,8 +122,17 @@ class Scraper
   end
 
   def pcel
-    webpage = agent.get(distributors[:pcel])
-    binding.pry
+    chrome.navigate.to distributors[:pcel]
+    input = chrome.find_element(name: 'filter_name')
+    input.send_keys @keywords
+    chrome.find_element(class: 'button-search').click
+    results_page = agent.get(chrome.current_url)
+    chrome.quit
+    results_page.css('tr').each do |item|
+      @results[0] << item.css('div.name').text[0...35] unless item.css('div.name').empty?
+      @results[1] << item.css('span.price-new').text unless item.css('div.name').empty?
+      @results[2] << item.css('a').first['href'] unless item.css('div.name').empty?
+    end
   end
 
   def ddtech; end
