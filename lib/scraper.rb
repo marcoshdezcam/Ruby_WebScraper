@@ -171,7 +171,16 @@ class Scraper
     end
   end
 
-  def highpro; end
+  def highpro
+    webpage = agent.get(distributors[:highpro])
+    webpage.form_with(id: 'searchbox').search_query = @keywords
+    results_page = webpage.form_with(id: 'searchbox').submit
+    results_page.css('div.product-container').each do |item|
+      @results[0] << item.css('h5.product-title-item').text
+      @results[1] << item.css('div.product-price-and-shipping').text
+      @results[2] << item.css('a').first['href']
+    end
+  end
 
   def pcdigital; end
 
