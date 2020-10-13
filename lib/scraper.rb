@@ -34,13 +34,13 @@ class Scraper
     mipc
     orbitalstore
     grupodecme
+    digitalife
   end
 
   def mercadolibre
     webpage = @agent.get(distributors[:mercadolibre])
-    search_form = webpage.forms.first
-    search_form.as_word = @keywords
-    results_page = agent.submit(search_form)
+    webpage.forms.first.as_word = @keywords
+    results_page = webpage.forms.first.submit
     results_page.css('div.ui-search-result__wrapper').each do |item|
       @results[0] << item.css('h2.ui-search-item__title').text
       @results[1] << item.css('span.ui-search-price__part').first.text
@@ -50,9 +50,8 @@ class Scraper
 
   def cyberpuerta
     webpage = @agent.get(distributors[:cyberpuerta])
-    search_form = webpage.form('search')
-    search_form.searchparam = @keywords
-    results_page = agent.submit(search_form)
+    webpage.form('search').searchparam = @keywords
+    results_page = webpage.form('search').submit
     results_page.css('div.emproduct').each do |item|
       @results[0] << item.css('a.emproduct_right_title').text
       @results[1] << item.css('label.price').text
@@ -63,13 +62,11 @@ class Scraper
   def pchmayoreo
     webpage = agent.get(distributors[:pchmayoreo])
     login_page = webpage.link_with(text: 'Iniciar Sesión').click
-    login_form = login_page.form_with(id: 'login-form')
-    login_form.field_with(id: 'email').value = ENV['pch_user_id']
-    login_form.field_with(id: 'pass').value = ENV['pch_pass_key']
-    client_homepage = login_form.submit
-    search_form = client_homepage.form_with(id: 'search_mini_form')
-    search_form.q = @keywords
-    results_page = agent.submit(search_form)
+    login_page.form_with(id: 'login-form').field_with(id: 'email').value = ENV['pch_user_id']
+    login_page.form_with(id: 'login_form').field_with(id: 'pass').value = ENV['pch_pass_key']
+    client_homepage = login_page.form_with(id: 'login_form').submit
+    client_homepage.form_with(id: 'search_mini_form').q = @keywords
+    results_page = client_homepage.form_with(id: 'search_mini_form').submit
     results_page.css('div.item-inner').each do |item|
       @results[0] << item.css('h2.product-name').text
       @results[1] << item.css('span.price').text
@@ -79,9 +76,8 @@ class Scraper
 
   def mipc
     webpage = agent.get(distributors[:mipc])
-    search_form = webpage.form_with(id: 'search_mini_form')
-    search_form.q = @keywords
-    results_page = agent.submit(search_form)
+    webpage.form_with(id: 'search_mini_form').q = @keywords
+    results_page = webpage.form_with(id: 'search_mini_form').submit
     results_page.css('li.product-item').each do |item|
       @results[0] << item.css('h5.product-item-name').text
       @results[1] << item.at('[data-price-type="finalPrice"]').text
@@ -105,11 +101,20 @@ class Scraper
     results_page.css('a.product-grid-item').each do |item|
       @results[0] << item.css('a.product-grid p').text
       @results[1] << item.css('span.visually-hidden')[1].text
-      @results[2].push(distributors[:grupodecme] + item['href'])
+      @results[2] << (distributors[:grupodecme] + item['href'])
     end
   end
 
-  def digitalife; end
+  def digitalife
+    webpage = agent.get(distributors[:digitalife])
+    webpage.form_with(class: 'buscador form-inline text-center').term = @keywords
+    results_page = webpage.form_with(class: 'buscador form-inline text-center').submit
+    results_page.css('div.productoInfoBloq').each do |item|
+      @results[0] << item.css('span.tituloHighlight').text
+      @results[1] << item.css('div.precioFlag').text
+      @results[2] << item.css('a').first['href']
+    end
+  end
 
   def pcel; end
 
