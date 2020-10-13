@@ -8,17 +8,19 @@ class Scraper
 
   def initialize(keywords)
     @agent = Mechanize.new
-    @chrome = Selenium::WebDriver.for :chrome
+    chrome_options = Selenium::WebDriver::Chrome::Options.new
+    chrome_options.add_argument('--headless')
+    @chrome = Selenium::WebDriver.for :chrome, options: chrome_options
     @results = [['Product name'], ['Price'], ['URL']]
     @keywords = keywords
     @distributors = {
-      mercadolibre: 'https://www.mercadolibre.com.mx/',
-      cyberpuerta: 'https://www.cyberpuerta.mx/',
-      pchmayoreo: 'https://www.pchmayoreo.com/',
-      mipc: 'https://mipc.com.mx/',
-      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=',
-      grupodecme: 'https://grupodecme.com',
-      digitalife: 'https://www.digitalife.com.mx/',
+      mercadolibre: 'https://www.mercadolibre.com.mx/', cyberpuerta: 'https://www.cyberpuerta.mx/',
+      pchmayoreo: 'https://www.pchmayoreo.com/', mipc: 'https://mipc.com.mx/',
+      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', grupodecme: 'https://grupodecme.com',
+      digitalife: 'https://www.digitalife.com.mx/', pcel: 'https://pcel.com/index.php?route=product/search',
+      ddtech: 'https://ddtech.mx/', zegucom: 'https://www.zegucom.com.mx/',
+      pcmig: 'https://pcmig.com.mx/', highpro: 'https://highpro.com.mx/',
+      pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/'
       pcel: 'https://pcel.com/index.php?route=product/search',
       ddtech: 'https://ddtech.mx/',
       zegucom: 'https://www.zegucom.com.mx/',
