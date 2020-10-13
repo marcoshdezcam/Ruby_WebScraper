@@ -137,7 +137,16 @@ class Scraper
     end
   end
 
-  def ddtech; end
+  def ddtech
+    webpage = agent.get(distributors[:ddtech])
+    webpage.forms.first.search = @keywords
+    results_page = webpage.forms.first.submit
+    results_page.css('div.item').each do |item|
+      @results[0] << item.css('a').text
+      @results[1] << item.css('span.price').text
+      @results[2] << item.css('a').first['href']
+    end
+  end
 
   def zegucom; end
 
