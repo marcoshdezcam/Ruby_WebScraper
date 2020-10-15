@@ -21,13 +21,6 @@ class Scraper
       ddtech: 'https://ddtech.mx/', zegucom: 'https://www.zegucom.com.mx/',
       pcmig: 'https://pcmig.com.mx/', highpro: 'https://highpro.com.mx/',
       pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/'
-      pcel: 'https://pcel.com/index.php?route=product/search',
-      ddtech: 'https://ddtech.mx/',
-      zegucom: 'https://www.zegucom.com.mx/',
-      pcmig: 'https://pcmig.com.mx/',
-      highpro: 'https://highpro.com.mx/',
-      pcdigital: 'https://www.pcdigital.com.mx/',
-      intercompras: 'https://intercompras.com/'
     }
   end
 
@@ -40,7 +33,13 @@ class Scraper
     grupodecme
     digitalife
     pcel
+    ddtech
     zegucom
+    pcmig
+    highpro
+    pcdigital
+    intercompras
+    clean_results
   end
 
   def mercadolibre
@@ -77,7 +76,7 @@ class Scraper
     results_page = agent.submit(search_form)
     results_page.css('div.item-inner').each do |item|
       @results[0] << item.css('h2.product-name').text
-      @results[1] << item.css('span.price').text
+      @results[1] << item.css('span.price').first.text
       @results[2] << item.css('h2.product-name a').first['href']
     end
   end
@@ -130,7 +129,6 @@ class Scraper
     input.send_keys @keywords
     chrome.find_element(class: 'button-search').click
     results_page = agent.get(chrome.current_url)
-    chrome.quit
     results_page.css('tr').each do |item|
       @results[0] << item.css('div.name').text[0...35] unless item.css('div.name').empty?
       @results[1] << item.css('span.price-new').text unless item.css('div.name').empty?
@@ -207,10 +205,24 @@ class Scraper
     end
   end
 
-  def show_distributors; end
+  def clean_results
+    @results.each do |parameter|
+      parameter.each do |item|
+        item.tr!("\t", '')
+        item.tr!("\n", '')
+        item.tr!("\r", '')
+        item.strip!
+      end
+    end
+  end
+
+  def show_results
+    @results
+  end
 
   def create_listing; end
 end
 
 scraping_test = Scraper.new('RAM 8GB')
 scraping_test.search
+binding.pry
