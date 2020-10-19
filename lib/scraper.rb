@@ -28,19 +28,19 @@ class Scraper
   def search
     amazon
     mercadolibre
-    cyberpuerta
-    pchmayoreo
-    mipc
-    orbitalstore
-    grupodecme
-    digitalife
-    pcel
-    ddtech
-    zegucom
-    pcmig
-    highpro
-    pcdigital
-    intercompras
+    # cyberpuerta
+    # pchmayoreo
+    # mipc
+    # orbitalstore
+    # grupodecme
+    # digitalife
+    # pcel
+    # ddtech
+    # zegucom
+    # pcmig
+    # highpro
+    # pcdigital
+    # intercompras
     clean_results
   end
 
@@ -49,10 +49,14 @@ class Scraper
     input = @chrome.find_element(name: 'field-keywords')
     input.send_keys @keywords
     input.submit
-    @chrome.find_elements(class: 's-result-item')[0...30].each do |item|
-      @results[0] << item.find_element(class: 'a-text-normal').text
-      @results[1] << item.find_element(class: 'a-price').text
-      @results[2] << item.find_element(class: 'a-text-normal').attribute('href')
+    @chrome.find_elements(class: 's-result-item').each do |item|
+      begin
+        @results[0] << item.find_element(class: 'a-text-normal').text
+        @results[1] << item.find_element(class: 'a-price').text
+        @results[2] << item.find_element(class: 'a-text-normal').attribute('href')
+      rescue Selenium::WebDriver::Error::NoSuchElementError
+        break
+      end
     end
   end
 
@@ -237,6 +241,6 @@ class Scraper
   def create_listing; end
 end
 
-scraping_test = Scraper.new('RAM 8GB')
+scraping_test = Scraper.new('RAM 32GB')
 scraping_test.search
 scraping_test.show_results
