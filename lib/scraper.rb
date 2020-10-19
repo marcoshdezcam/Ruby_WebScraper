@@ -1,4 +1,5 @@
 require_relative '../config/credentials.rb'
+# require 'listing'
 require 'mechanize'
 require 'pry'
 require 'selenium-webdriver'
@@ -20,11 +21,12 @@ class Scraper
       digitalife: 'https://www.digitalife.com.mx/', pcel: 'https://pcel.com/index.php?route=product/search',
       ddtech: 'https://ddtech.mx/', zegucom: 'https://www.zegucom.com.mx/',
       pcmig: 'https://pcmig.com.mx/', highpro: 'https://highpro.com.mx/',
-      pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/'
+      pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/', amazon: 'https://www.amazon.com.mx/'
     }
   end
 
   def search
+    amazon
     mercadolibre
     cyberpuerta
     pchmayoreo
@@ -40,6 +42,18 @@ class Scraper
     pcdigital
     intercompras
     clean_results
+  end
+
+  def amazon
+    @chrome.navigate.to distributors[:amazon]
+    input = @chrome.find_element(name: 'field-keywords')
+    input.send_keys @keywords
+    input.submit
+    @chrome.find_elements(class: 's-result-item')[0...30].each do |item|
+      @results[0] << item.find_element(class: 'a-text-normal').text
+      @results[1] << item.find_element(class: 'a-price').text
+      @results[2] << item.find_element(class: 'a-text-normal').attribute('href')
+    end
   end
 
   def mercadolibre
@@ -65,7 +79,7 @@ class Scraper
   end
 
   def pchmayoreo
-    webpage = agent.get(distributors[:pchmayoreo])
+    webpage = @agent.get(distributors[:pchmayoreo])
     login_page = webpage.link_with(text: 'Iniciar Sesión').click
     login_form = login_page.form_with(id: 'login-form')
     login_form.field_with(id: 'email').value = ENV['pch_user_id']
@@ -82,7 +96,7 @@ class Scraper
   end
 
   def mipc
-    webpage = agent.get(distributors[:mipc])
+    webpage = @agent.get(distributors[:mipc])
     webpage.form_with(id: 'search_mini_form').q = @keywords
     results_page = webpage.form_with(id: 'search_mini_form').submit
     results_page.css('li.product-item').each do |item|
@@ -93,7 +107,7 @@ class Scraper
   end
 
   def orbitalstore
-    results_page = agent.get(distributors[:oribalstore] + @keywords)
+    results_page = @agent.get(distributors[:oribalstore] + @keywords)
     results_page.css('div.item').each do |item|
       @results[0] << item.css('a.title').text
       @results[1] << item.css('div.played').text
@@ -102,7 +116,7 @@ class Scraper
   end
 
   def grupodecme
-    webpage = agent.get(distributors[:grupodecme])
+    webpage = @agent.get(distributors[:grupodecme])
     webpage.forms.first.q = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('a.product-grid-item').each do |item|
@@ -113,7 +127,7 @@ class Scraper
   end
 
   def digitalife
-    webpage = agent.get(distributors[:digitalife])
+    webpage = @agent.get(distributors[:digitalife])
     webpage.form_with(class: 'buscador form-inline text-center').term = @keywords
     results_page = webpage.form_with(class: 'buscador form-inline text-center').submit
     results_page.css('div.productoInfoBloq').each do |item|
@@ -124,11 +138,11 @@ class Scraper
   end
 
   def pcel
-    chrome.navigate.to distributors[:pcel]
-    input = chrome.find_element(name: 'filter_name')
+    @chrome.navigate.to distributors[:pcel]
+    input = @chrome.find_element(name: 'filter_name')
     input.send_keys @keywords
     chrome.find_element(class: 'button-search').click
-    results_page = agent.get(chrome.current_url)
+    results_page = @agent.get(@chrome.current_url)
     results_page.css('tr').each do |item|
       @results[0] << item.css('div.name').text[0...35] unless item.css('div.name').empty?
       @results[1] << item.css('span.price-new').text unless item.css('div.name').empty?
@@ -137,7 +151,7 @@ class Scraper
   end
 
   def ddtech
-    webpage = agent.get(distributors[:ddtech])
+    webpage = @agent.get(distributors[:ddtech])
     webpage.forms.first.search = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('div.item').each do |item|
@@ -148,7 +162,7 @@ class Scraper
   end
 
   def zegucom
-    webpage = agent.get(distributors[:zegucom])
+    webpage = @agent.get(distributors[:zegucom])
     webpage.forms.first.cons = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('div.search-result').each do |item|
@@ -159,7 +173,7 @@ class Scraper
   end
 
   def pcmig
-    webpage = agent.get(distributors[:pcmig])
+    webpage = @agent.get(distributors[:pcmig])
     webpage.forms.first.s = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('div.product-wrapper').each do |item|
@@ -170,7 +184,7 @@ class Scraper
   end
 
   def highpro
-    webpage = agent.get(distributors[:highpro])
+    webpage = @agent.get(distributors[:highpro])
     webpage.form_with(id: 'searchbox').search_query = @keywords
     results_page = webpage.form_with(id: 'searchbox').submit
     results_page.css('div.product-container').each do |item|
@@ -181,12 +195,11 @@ class Scraper
   end
 
   def pcdigital
-    chrome.navigate.to distributors[:pcdigital]
-    input = chrome.find_element(name: 'search')
+    @chrome.navigate.to distributors[:pcdigital]
+    input = @chrome.find_element(name: 'search')
     input.send_keys @keywords
-    chrome.find_element(class: 'button-search').click
-    results_page = agent.get(chrome.current_url)
-    chrome.quit
+    @chrome.find_element(class: 'button-search').click
+    results_page = agent.get(@chrome.current_url)
     results_page.css('div.product').each do |item|
       @results[0] << item.css('div.name').text
       @results[1] << item.css('span.price-new').text
@@ -195,7 +208,7 @@ class Scraper
   end
 
   def intercompras
-    webpage = agent.get(distributors[:intercompras])
+    webpage = @agent.get(distributors[:intercompras])
     webpage.forms.first.keywords = @keywords
     results_page = webpage.forms.first.submit
     results_page.css('div.divContentProductInfo').each do |item|
@@ -218,6 +231,7 @@ class Scraper
 
   def show_results
     @results
+    binding.pry
   end
 
   def create_listing; end
@@ -225,4 +239,4 @@ end
 
 scraping_test = Scraper.new('RAM 8GB')
 scraping_test.search
-binding.pry
+scraping_test.show_results
