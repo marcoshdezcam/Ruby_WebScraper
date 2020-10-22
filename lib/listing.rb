@@ -7,9 +7,13 @@ class Listing
     @products = []
   end
 
-  def find_cheapest; end
+  def find_cheapest
+    remove_wrong_results
+    @products.sort_by!(&:price)
+    @products[0...30]
+  end
 
-  def show_listing
-    @products
+  def remove_wrong_results
+    @products.delete_if { |product| product.price.empty? }
   end
 end

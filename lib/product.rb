@@ -3,7 +3,7 @@ class Product
 
   def initialize(name, price, url)
     @name = clean_string(name)
-    @price = clean_string(price)
+    @price = remove_spaces(clean_string(price))
     @url = url
   end
 
@@ -13,5 +13,9 @@ class Product
     string.tr!("\r", '')
     string.strip!
     string
+  end
+
+  def remove_spaces(string)
+    string.delete(' ')
   end
 end
