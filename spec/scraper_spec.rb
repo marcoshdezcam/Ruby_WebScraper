@@ -11,9 +11,9 @@ describe Scraper do
     end
   end
   context %(When a search is done) do
-    it %(saves the results on the instance variable results) do
+    it %(saves the results on Listing.products) do
       scraper.search
-      expect(scraper.results.empty?).to be false
+      expect(scraper.listing.products.empty?).to be false
     end
   end
   context %(When searching on each distributor, return true or false to report retults) do
@@ -25,7 +25,6 @@ describe Scraper do
     it { expect(scraper.grupodecme).to be(true).or be(false) }
     it { expect(scraper.digitalife).to be(true).or be(false) }
     it { expect(scraper.pcel).to be(true).or be(false) }
-    it { expect(scraper.ddtech).to be(true).or be(false) }
     it { expect(scraper.zegucom).to be(true).or be(false) }
     it { expect(scraper.pcmig).to be(true).or be(false) }
     it { expect(scraper.highpro).to be(true).or be(false) }
@@ -34,12 +33,7 @@ describe Scraper do
   end
   describe %(#show_distributors) do
     it %(returns the hash of distributors) do
-      expect(scraper.show_distributors).to be(scraper.distributors)
-    end
-  end
-  describe %(#create_listing) do
-    it %(creates a listing object with @results) do
-      expect(scraper.create_listing).to be_instance_of(Listing)
+      expect(scraper.show_distributors).to be_instance_of(Hash)
     end
   end
 end
