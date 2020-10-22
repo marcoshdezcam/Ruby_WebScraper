@@ -19,9 +19,9 @@ class Scraper
       pchmayoreo: 'https://www.pchmayoreo.com/', mipc: 'https://mipc.com.mx/',
       oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', grupodecme: 'https://grupodecme.com',
       digitalife: 'https://www.digitalife.com.mx/', pcel: 'https://pcel.com/index.php?route=product/search',
-      ddtech: 'https://ddtech.mx/', zegucom: 'https://www.zegucom.com.mx/',
-      pcmig: 'https://pcmig.com.mx/', highpro: 'https://highpro.com.mx/',
-      pcdigital: 'https://www.pcdigital.com.mx/', intercompras: 'https://intercompras.com/', amazon: 'https://www.amazon.com.mx/'
+      zegucom: 'https://www.zegucom.com.mx/', pcmig: 'https://pcmig.com.mx/',
+      highpro: 'https://highpro.com.mx/', pcdigital: 'https://www.pcdigital.com.mx/',
+      intercompras: 'https://intercompras.com/', amazon: 'https://www.amazon.com.mx/'
     }
   end
 
@@ -35,7 +35,6 @@ class Scraper
     grupodecme
     digitalife
     pcel
-    ddtech
     zegucom
     pcmig
     highpro
@@ -169,19 +168,6 @@ class Scraper
       @listing.products << Product.new(item.css('div.name').text,
                                        item.css('span.price-new').text,
                                        item.css('div.name a').first['href'])
-    end
-    @listing.products.size > results_before_search
-  end
-
-  def ddtech
-    results_before_search = @listing.products.size
-    webpage = @agent.get(distributors[:ddtech])
-    webpage.forms.first.search = @keywords
-    results_page = webpage.forms.first.submit
-    results_page.css('div.item').each do |item|
-      @listing.products << Product.new(item.css('a').text,
-                                       item.css('span.price').text,
-                                       item.css('a').first['href'])
     end
     @listing.products.size > results_before_search
   end
