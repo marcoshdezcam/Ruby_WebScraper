@@ -37,20 +37,52 @@ This is the list of distributors:
 ## 🛠  Getting Started
 
 To get a local copy up and running follow these simple example steps.
-* Depending on your distribution and, therefore your package manager, this commands may change. But here we use Ubuntu as an example.
 
 ### Prerequisites
-##### If you don't have rbenv and/or Ruby install with: 
+##### ChromeDriver (required by Selenium WebDriver)
+		 sudo apt-get install chromium-chromedriver
 
-- rbenv
-		apt install rbenv
-- Ruby 2.7.0
-		rbenv install 2.7.0
+##### Install gcc compiler (required by Mechanize dependencies)
+		sudo apt install build-essential
 
+##### Ruby
+If you don't have Ruby installed, follow the next steps:
+* Depending on your distribution and, therefore your package manager, this commands may change. Here, Ubuntu is used as an example. 
+
+- Update your system
+		sudo apt update
+		sudo apt upgrade
+
+- Install libraries and dependencies:
+		sudo apt install gcc make libssl-dev libreadline-dev zlib1g-dev libsqlite3-dev
+
+- Install rbenv
+		git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+
+- Add rbemv to your PATH
+		echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+		echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+		exit
+
+- After the last step you need to open a new terminal to load the new PATH variables and run: 
+		mkdir -p "$(rbenv root)"/plugins
+		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+- Finally, to make sure rbenv is installed, run:
+		rbenv -v
+		
+- Install Ruby
+		rbenv install 2.7.0 --verbose
+
+- Verify everything is working and set global Ruby version as 2.7.0
+		rbenv global 2.7.0
+
+- Verify Ruby version
+		ruby -v
 
 ### Setup
 ####Install required gems for this project
-
+This command will install Mechanize, Selenium WebDriver, Rspec, Rubocop and Simplecov gems:
 		bundle install
 
 
@@ -64,7 +96,7 @@ Using 'RAM 16GB' as a search example. Run the scraper with the following:
 		web_scraper = Scraper.new('RAM 16GB')
 		web_scraper.search
 
-All search results will be saved on Scraper.Listing.products.
+All search results will be saved on Scraper.Listing.products
 
 		web_scraper.listing.products
 
