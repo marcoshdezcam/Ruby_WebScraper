@@ -3,17 +3,17 @@
 > This is a simple web scraper to search for the best price of PC Hardware parts on websites that sell and ship to México.
 
 It works by searching for specific keywords of PC Hardware on the biggest México's websites. Then, it will show the best matches with the lowest prices available.
+Mechanize with Nokogiri as dependency was used to fill search forms. And, Selenium to scrape websites (like Amazon) that require a real browser to visit their shop.
 
+This is the list of distributors: 
 - MercadoLibre.com.mx
 - Cyberpuerta.mx
-- PCHMayoreo.com
 - MiPC.com.mx
 - Orbitalstore.mx
 - Grupodecme.com
 - Dimercom.mx
 - Digitalife.com.mx
 - PCel.com
-- DDTech.mx
 - Zegucom.com.mx
 - PCMig.com.mx
 - HighPro.com.mx
@@ -31,18 +31,87 @@ It works by searching for specific keywords of PC Hardware on the biggest Méxic
 - Gitflow workflow
 - [Mechanize](https://github.com/sparklemotion/mechanize) 	* Includes Nokogiri as dependency
 - [RSpec](https://rspec.info/)
-
-## 🔴 Live Demo
+- [Selenium Webdriver](https://github.com/SeleniumHQ/selenium/tree/trunk/rb)
+- [Simplecov](https://github.com/simplecov-ruby/simplecov)
 
 ## 🛠  Getting Started
 
 To get a local copy up and running follow these simple example steps.
+
 ### Prerequisites
+##### ChromeDriver (required by Selenium WebDriver)
+		 sudo apt-get install chromium-chromedriver
+
+##### Install gcc compiler (required by Mechanize dependencies)
+		sudo apt install build-essential
+
+##### Ruby
+If you don't have Ruby installed, follow the next steps:
+* Depending on your distribution and, therefore your package manager, this commands may change. Here, Ubuntu is used as an example. 
+
+- Update your system
+		sudo apt update
+		sudo apt upgrade
+
+- Install libraries and dependencies:
+		sudo apt install gcc make libssl-dev libreadline-dev zlib1g-dev libsqlite3-dev
+
+- Install rbenv
+		git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+
+- Add rbemv to your PATH
+		echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+		echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+		exit
+
+- After the last step you need to open a new terminal to load the new PATH variables and run: 
+		mkdir -p "$(rbenv root)"/plugins
+		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+
+- Finally, to make sure rbenv is installed, run:
+		rbenv -v
+		
+- Install Ruby
+		rbenv install 2.7.0 --verbose
+
+- Verify everything is working and set global Ruby version as 2.7.0
+		rbenv global 2.7.0
+
+- Verify Ruby version
+		ruby -v
+
 ### Setup
-### Install
+####Install required gems for this project
+This command will install Mechanize, Selenium WebDriver, Rspec, Rubocop and Simplecov gems:
+		bundle install
+
+
 ### Usage
+Include the following line at the top of your file:
+
+		require './lib/scraper.rb'
+
+Using 'RAM 16GB' as a search example. Run the scraper with the following: 
+
+		web_scraper = Scraper.new('RAM 16GB')
+		web_scraper.search
+
+All search results will be saved on Scraper.Listing.products
+
+		web_scraper.listing.products
+
+Show the 30 cheapest products found:
+		
+		web_scraper.listing.find_cheapest
+
+
 ### Run tests
-### Deployment
+To run the tests just use the following command:
+
+		rspec
+
+#### Simplecov report:
+![Test report](./img/test_report.png)
 
 ## ✒️ Author
 
