@@ -8,14 +8,12 @@ Mechanize with Nokogiri as dependency was used to fill search forms. And, Seleni
 This is the list of distributors: 
 - MercadoLibre.com.mx
 - Cyberpuerta.mx
-- PCHMayoreo.com
 - MiPC.com.mx
 - Orbitalstore.mx
 - Grupodecme.com
 - Dimercom.mx
 - Digitalife.com.mx
 - PCel.com
-- DDTech.mx
 - Zegucom.com.mx
 - PCMig.com.mx
 - HighPro.com.mx
@@ -39,12 +37,49 @@ This is the list of distributors:
 ## 🛠  Getting Started
 
 To get a local copy up and running follow these simple example steps.
+* Depending on your distribution and, therefore your package manager, this commands may change. But here we use Ubuntu as an example.
+
 ### Prerequisites
+##### If you don't have rbenv and/or Ruby install with: 
+
+- rbenv
+		apt install rbenv
+- Ruby 2.7.0
+		rbenv install 2.7.0
+
+
 ### Setup
-### Install
+####Install required gems for this project
+
+		bundle install
+
+
 ### Usage
+Include the following line at the top of your file:
+
+		require './lib/scraper.rb'
+
+Using 'RAM 16GB' as a search example. Run the scraper with the following: 
+
+		web_scraper = Scraper.new('RAM 16GB')
+		web_scraper.search
+
+All search results will be saved on Scraper.Listing.products.
+
+		web_scraper.listing.products
+
+Show the 30 cheapest products found:
+		
+		web_scraper.listing.find_cheapest
+
+
 ### Run tests
-### Deployment
+To run the tests just use the following command:
+
+		rspec
+
+#### Simplecov report:
+![Test report](./img/test_report.png)
 
 ## ✒️ Author
 
