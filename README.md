@@ -3,7 +3,9 @@
 > This is a simple web scraper to search for the best price of PC Hardware parts on websites that sell and ship to México.
 
 It works by searching for specific keywords of PC Hardware on the biggest México's websites. Then, it will show the best matches with the lowest prices available.
+Mechanize with Nokogiri as dependency was used to fill search forms. And, Selenium to scrape websites (like Amazon) that require a real browser to visit their shop.
 
+This is the list of distributors: 
 - MercadoLibre.com.mx
 - Cyberpuerta.mx
 - PCHMayoreo.com
@@ -31,8 +33,8 @@ It works by searching for specific keywords of PC Hardware on the biggest Méxic
 - Gitflow workflow
 - [Mechanize](https://github.com/sparklemotion/mechanize) 	* Includes Nokogiri as dependency
 - [RSpec](https://rspec.info/)
-
-## 🔴 Live Demo
+- [Selenium Webdriver](https://github.com/SeleniumHQ/selenium/tree/trunk/rb)
+- [Simplecov](https://github.com/simplecov-ruby/simplecov)
 
 ## 🛠  Getting Started
 
