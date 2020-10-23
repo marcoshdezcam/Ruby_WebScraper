@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 require_relative './listing.rb'
 require 'mechanize'
 require 'selenium-webdriver'
@@ -221,3 +222,4 @@ class Scraper
     @distributors
   end
 end
+# rubocop:enable Metrics/ClassLength

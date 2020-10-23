@@ -19,7 +19,6 @@ describe Scraper do
   context %(When searching on each distributor, return true or false to report retults) do
     it { expect(scraper.mercadolibre).to be(true).or be(false) }
     it { expect(scraper.cyberpuerta).to be(true).or be(false) }
-    it { expect(scraper.pchmayoreo).to be(true).or be(false) }
     it { expect(scraper.mipc).to be(true).or be(false) }
     it { expect(scraper.orbitalstore).to be(true).or be(false) }
     it { expect(scraper.grupodecme).to be(true).or be(false) }
