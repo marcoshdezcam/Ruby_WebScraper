@@ -4,7 +4,7 @@ require 'mechanize'
 require 'selenium-webdriver'
 
 class Scraper
-  attr_reader :agent, :chrome, :keywords, :distributors, :listing
+  attr_reader :agent, :chrome, :keywords, :distributors, :listing, :results_register
 
   def initialize(keywords)
     @agent = Mechanize.new
@@ -14,30 +14,35 @@ class Scraper
     @listing = Listing.new
     @keywords = keywords
     @distributors = {
-      mercadolibre: 'https://www.mercadolibre.com.mx/', cyberpuerta: 'https://www.cyberpuerta.mx/',
-      mipc: 'https://mipc.com.mx/', amazon: 'https://www.amazon.com.mx/',
-      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', grupodecme: 'https://grupodecme.com',
-      digitalife: 'https://www.digitalife.com.mx/', pcel: 'https://pcel.com/index.php?route=product/search',
+      amazon: 'https://www.amazon.com.mx/', mercadolibre: 'https://www.mercadolibre.com.mx/',
+      cyberpuerta: 'https://www.cyberpuerta.mx/', digitalife: 'https://www.digitalife.com.mx/',
+      grupodecme: 'https://grupodecme.com', mipc: 'https://mipc.com.mx/',
+      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', pcel: 'https://pcel.com/index.php?route=product/search',
       zegucom: 'https://www.zegucom.com.mx/', pcmig: 'https://pcmig.com.mx/',
       highpro: 'https://highpro.com.mx/', pcdigital: 'https://www.pcdigital.com.mx/',
       intercompras: 'https://intercompras.com/'
     }
+    @results_register = { amazon: '', mercadolibre: '', cyberpuerta: '',
+                          digitalife: '', grupodecme: '', mipc: '',
+                          orbitalstore: '', pcel: '', zegucom: '',
+                          pcmig: '', highpro: '', pcdigital: '',
+                          intercompras: '' }
   end
 
   def search
-    amazon
-    mercadolibre
-    cyberpuerta
-    mipc
-    orbitalstore
-    grupodecme
-    digitalife
-    pcel
-    zegucom
-    pcmig
-    highpro
-    pcdigital
-    intercompras
+    results_register[:amazon] = amazon
+    results_register[:mercadolibre] = mercadolibre
+    results_register[:cyberpuerta] = cyberpuerta
+    results_register[:digitalife] = digitalife
+    results_register[:grupodecme] = grupodecme
+    results_register[:mipc] = mipc
+    results_register[:orbitalstore] = orbitalstore
+    results_register[:pcel] = pcel
+    results_register[:zegucom] = zegucom
+    results_register[:pcmig] = pcmig
+    results_register[:highpro] = highpro
+    results_register[:pcdigital] = pcdigital
+    results_register[:intercompras] = intercompras
   end
 
   private
