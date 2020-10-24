@@ -40,6 +40,8 @@ class Scraper
     intercompras
   end
 
+  private
+
   def amazon
     results_before_search = @listing.products.size
     @chrome.navigate.to distributors[:amazon]

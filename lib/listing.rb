@@ -13,6 +13,8 @@ class Listing
     @products[0...30]
   end
 
+  private
+
   def remove_wrong_results
     @products.delete_if { |product| product.price.empty? }
   end
