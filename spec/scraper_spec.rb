@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/BlockLength
 require_relative '../lib/scraper.rb'
 
 describe Scraper do
@@ -16,23 +17,46 @@ describe Scraper do
       expect(scraper.listing.products.empty?).to be false
     end
   end
-  context %(When searching on each distributor, return true or false to report retults) do
-    it { expect(scraper.mercadolibre).to be(true).or be(false) }
-    it { expect(scraper.cyberpuerta).to be(true).or be(false) }
-    it { expect(scraper.mipc).to be(true).or be(false) }
-    it { expect(scraper.orbitalstore).to be(true).or be(false) }
-    it { expect(scraper.grupodecme).to be(true).or be(false) }
-    it { expect(scraper.digitalife).to be(true).or be(false) }
-    it { expect(scraper.pcel).to be(true).or be(false) }
-    it { expect(scraper.zegucom).to be(true).or be(false) }
-    it { expect(scraper.pcmig).to be(true).or be(false) }
-    it { expect(scraper.highpro).to be(true).or be(false) }
-    it { expect(scraper.pcdigital).to be(true).or be(false) }
-    it { expect(scraper.intercompras).to be(true).or be(false) }
-  end
-  describe %(#show_distributors) do
-    it %(returns the hash of distributors) do
-      expect(scraper.show_distributors).to be_instance_of(Hash)
+  context %(When searching, each distributor method returns true or false to report if there was any results) do
+    it %(saves true or false to report results on Amazon) do
+      expect(scraper.results_register[:amazon]).not_to be nil
+    end
+    it %(saves true or false to report results on Mercado Libre) do
+      expect(scraper.results_register[:mercadolibre]).not_to be nil
+    end
+    it %(saves true or false to report results on Cyberpuerta) do
+      expect(scraper.results_register[:cyberpuerta]).not_to be nil
+    end
+    it %(saves true or false to report results on Digitalife) do
+      expect(scraper.results_register[:digitalife]).not_to be nil
+    end
+    it %(saves true or false to report results on Grupodecme) do
+      expect(scraper.results_register[:grupodecme]).not_to be nil
+    end
+    it %(saves true or false to report results on MiPC) do
+      expect(scraper.results_register[:mipc]).not_to be nil
+    end
+    it %(saves true or false to report results on Orbital Store) do
+      expect(scraper.results_register[:orbitalstore]).not_to be nil
+    end
+    it %(saves true or false to report results on PC En Linea) do
+      expect(scraper.results_register[:pcel]).not_to be nil
+    end
+    it %(saves true or false to report results on Zegucom) do
+      expect(scraper.results_register[:zegucom]).not_to be nil
+    end
+    it %(saves true or false to report results on PCMig) do
+      expect(scraper.results_register[:pcmig]).not_to be nil
+    end
+    it %(saves true or false to report results on High Pro) do
+      expect(scraper.results_register[:highpro]).not_to be nil
+    end
+    it %(saves true or false to report results on PC Digital) do
+      expect(scraper.results_register[:pcdigital]).not_to be nil
+    end
+    it %(saves true or false to report results on Intercompras) do
+      expect(scraper.results_register[:intercompras]).not_to be nil
     end
   end
 end
+# rubocop: enable Metrics/BlockLength
