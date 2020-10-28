@@ -1,5 +1,6 @@
-# rubocop:disable Metrics/ClassLength
+# rubocop: disable Metrics/ClassLength
 require_relative './listing.rb'
+require 'csv'
 require 'mechanize'
 require 'selenium-webdriver'
 
@@ -43,6 +44,26 @@ class Scraper
     highpro
     pcdigital
     intercompras
+  end
+
+  def create_csv
+    CSV.open('results.csv', 'w+') do |row|
+      row << ['Cheapest products found']
+      row << %w[Name Price URL]
+      @listing.cheapest_products.size.times do |i|
+        row << [@listing.cheapest_products[i].name,
+                @listing.cheapest_products[i].price,
+                @listing.cheapest_products[i].url]
+      end
+      row << ['']
+      row << ['All results found ordered by price']
+      row << %w[Name Price URL]
+      @listing.products.size.times do |i|
+        row << [@listing.products[i].name,
+                @listing.products[i].price,
+                @listing.products[i].url]
+      end
+    end
   end
 
   private
@@ -165,7 +186,7 @@ class Scraper
     results_page = webpage.forms.first.submit
     results_page.css('div.search-result').each do |item|
       @listing.products << Product.new(item.css('div.result-description a').text,
-                                       item.css('span.result-price-search').text,
+                                       item.css('span.result-price-search').text[0...10],
                                        (distributors[:zegucom] + item.css('a')[1]['href']))
     end
     @results_register[:zegucom] = @listing.products.size > results_before_search
@@ -222,7 +243,7 @@ class Scraper
                                        item.css('div.divProductListPrice').text,
                                        item.css('a').first['href'])
     end
-    @results_register = @listing.products.size > results_before_search
+    @results_register[:intercompras] = @listing.products.size > results_before_search
   end
 end
-# rubocop:enable Metrics/ClassLength
+# rubocop: enable Metrics/ClassLength
