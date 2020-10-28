@@ -43,6 +43,8 @@ To get a local copy up and running follow these simple example steps.
 ### Prerequisites
 Depending on your distribution and, therefore your package manager, this commands may change. Here, Ubuntu is used as an example. 
 
+- Ruby 2.7.x
+
 ##### ChromeDriver (required by Selenium WebDriver)
 		 
 	sudo apt-get install chromium-chromedriver
@@ -51,47 +53,6 @@ Depending on your distribution and, therefore your package manager, this command
 		
 	sudo apt install build-essential
 
-##### Rspec (if you want to run the tests)
-
-	sudo apt install ruby-rspec-core
-
-##### Ruby
-
-Install libraries and dependencies:
-
-	sudo apt install gcc make libssl-dev libreadline-dev zlib1g-dev libsqlite3-dev
-
-Install rbenv
-		
-	git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-
-Add rbenv to your PATH
-
-	echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-	echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-	exit
-
-After the last step you need to open a new terminal to load the new PATH variables and run: 
-
-	mkdir -p "$(rbenv root)"/plugins
-	git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-
-Finally, to make sure rbenv is installed, run:
-
-	rbenv -v
-		
-Install Ruby
-
-	rbenv install 2.7.0 --verbose
-
-Verify everything is working and set global Ruby version to 2.7.0
-
-	rbenv global 2.7.0
-
-Verify Ruby version
-
-	ruby -v
-
 ### Setup
 
 #### Clone Github repository
@@ -99,6 +60,7 @@ Verify Ruby version
 	git clone https://github.com/marcoshdezcam/Ruby_WebScraper.git
 
 #### Install required gems for this project
+After cloning the repository, go to the directory where you downloaded it and run: 
 
 	bundle install
 
