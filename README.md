@@ -47,9 +47,13 @@ Depending on your distribution and, therefore your package manager, this command
 		 
 	sudo apt-get install chromium-chromedriver
 
-##### Install gcc compiler (required by Mechanize dependencies)
+##### Install dependencies required by Mechanize
 		
 	sudo apt install build-essential
+
+##### Rspec (if you want to run the tests)
+
+	sudo apt install ruby-rspec-core
 
 ##### Ruby
 
@@ -61,7 +65,7 @@ Install rbenv
 		
 	git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 
-Add rbemv to your PATH
+Add rbenv to your PATH
 
 	echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 	echo 'eval "$(rbenv init -)"' >> ~/.bashrc
@@ -80,7 +84,7 @@ Install Ruby
 
 	rbenv install 2.7.0 --verbose
 
-Verify everything is working and set global Ruby version as 2.7.0
+Verify everything is working and set global Ruby version to 2.7.0
 
 	rbenv global 2.7.0
 
@@ -89,36 +93,28 @@ Verify Ruby version
 	ruby -v
 
 ### Setup
-####Install required gems for this project
-This command will install Mechanize, Selenium WebDriver, Rspec, Rubocop and Simplecov gems:
+
+#### Clone Github repository
+
+	git clone https://github.com/marcoshdezcam/Ruby_WebScraper.git
+
+#### Install required gems for this project
 
 	bundle install
 
-### Usage
-Include the following line at the top of your file:
+### How to start
 
-	require './lib/scraper.rb'
+To run a search on all distributors just run the next command: 
 
-Using 'RAM 16GB' as a search example. Run the scraper with the following: 
+	ruby ./bin/main.rb
 
-	web_scraper = Scraper.new('RAM 16GB')
-	web_scraper.search
+### Tests 
 
-All search results will be saved on Scraper.Listing.products
-
-	web_scraper.listing.products
-
-Show the 30 cheapest products found:
-		
-	web_scraper.listing.find_cheapest
-
-
-### Run tests
 To run the tests just use the following command:
 
 	rspec
 
-#### Simplecov report:
+#### Test coverage report:
 
 ![Test report](./img/test_report.png)
 
