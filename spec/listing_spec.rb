@@ -12,9 +12,9 @@ describe Listing do
   describe %(#find_cheapest) do
     it %(returns 30 product instances with the cheapest prices) do
       scraper.search
-      cheapest = scraper.listing.find_cheapest
-      expect(cheapest.first).to be_instance_of(Product)
-      expect(cheapest.size).to eq(30)
+      scraper.listing.find_cheapest
+      expect(scraper.listing.cheapest_products.first).to be_instance_of(Product)
+      expect(scraper.listing.cheapest_products.size).to eq(30)
     end
   end
 end
