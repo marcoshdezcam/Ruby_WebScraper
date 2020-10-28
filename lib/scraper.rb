@@ -46,8 +46,8 @@ class Scraper
     intercompras
   end
 
-  def create_csv
-    CSV.open('results.csv', 'w+') do |row|
+  def create_csv(filename)
+    CSV.open(filename + '.csv', 'w+') do |row|
       row << ['Cheapest products found']
       row << %w[Name Price URL]
       @listing.cheapest_products.size.times do |i|
