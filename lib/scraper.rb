@@ -1,10 +1,11 @@
-# rubocop:disable Metrics/ClassLength
+# rubocop: disable Metrics/ClassLength
 require_relative './listing.rb'
+require 'csv'
 require 'mechanize'
 require 'selenium-webdriver'
 
 class Scraper
-  attr_reader :agent, :chrome, :keywords, :distributors, :listing
+  attr_reader :agent, :chrome, :keywords, :distributors, :listing, :results_register
 
   def initialize(keywords)
     @agent = Mechanize.new
@@ -14,24 +15,29 @@ class Scraper
     @listing = Listing.new
     @keywords = keywords
     @distributors = {
-      mercadolibre: 'https://www.mercadolibre.com.mx/', cyberpuerta: 'https://www.cyberpuerta.mx/',
-      mipc: 'https://mipc.com.mx/', amazon: 'https://www.amazon.com.mx/',
-      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', grupodecme: 'https://grupodecme.com',
-      digitalife: 'https://www.digitalife.com.mx/', pcel: 'https://pcel.com/index.php?route=product/search',
+      amazon: 'https://www.amazon.com.mx/', mercadolibre: 'https://www.mercadolibre.com.mx/',
+      cyberpuerta: 'https://www.cyberpuerta.mx/', digitalife: 'https://www.digitalife.com.mx/',
+      grupodecme: 'https://grupodecme.com', mipc: 'https://mipc.com.mx/',
+      oribalstore: 'https://www.orbitalstore.mx/buscador/index.php?terms=', pcel: 'https://pcel.com/index.php?route=product/search',
       zegucom: 'https://www.zegucom.com.mx/', pcmig: 'https://pcmig.com.mx/',
       highpro: 'https://highpro.com.mx/', pcdigital: 'https://www.pcdigital.com.mx/',
       intercompras: 'https://intercompras.com/'
     }
+    @results_register = { amazon: '', mercadolibre: '', cyberpuerta: '',
+                          digitalife: '', grupodecme: '', mipc: '',
+                          orbitalstore: '', pcel: '', zegucom: '',
+                          pcmig: '', highpro: '', pcdigital: '',
+                          intercompras: '' }
   end
 
   def search
     amazon
     mercadolibre
     cyberpuerta
+    digitalife
+    grupodecme
     mipc
     orbitalstore
-    grupodecme
-    digitalife
     pcel
     zegucom
     pcmig
@@ -39,6 +45,28 @@ class Scraper
     pcdigital
     intercompras
   end
+
+  def create_csv(filename)
+    CSV.open(filename + '.csv', 'w+') do |row|
+      row << ['Cheapest products found']
+      row << %w[Name Price URL]
+      @listing.cheapest_products.size.times do |i|
+        row << [@listing.cheapest_products[i].name,
+                @listing.cheapest_products[i].price,
+                @listing.cheapest_products[i].url]
+      end
+      row << ['']
+      row << ['All results found ordered by price']
+      row << %w[Name Price URL]
+      @listing.products.size.times do |i|
+        row << [@listing.products[i].name,
+                @listing.products[i].price,
+                @listing.products[i].url]
+      end
+    end
+  end
+
+  private
 
   def amazon
     results_before_search = @listing.products.size
@@ -55,7 +83,7 @@ class Scraper
         next
       end
     end
-    @listing.products.size > results_before_search
+    @results_register[:amazon] = @listing.products.size > results_before_search
   end
 
   def mercadolibre
@@ -68,7 +96,7 @@ class Scraper
                                        item.css('span.ui-search-price__part').first.text,
                                        item.css('a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:mercadolibre] = @listing.products.size > results_before_search
   end
 
   def cyberpuerta
@@ -81,7 +109,7 @@ class Scraper
                                        item.css('label.price').text,
                                        item.css('a.emproduct_right_title').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:cyberpuerta] = @listing.products.size > results_before_search
   end
 
   def mipc
@@ -94,7 +122,7 @@ class Scraper
                                        item.at('[data-price-type="finalPrice"]').text,
                                        item.css('a.product-item-link').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:mipc] = @listing.products.size > results_before_search
   end
 
   def orbitalstore
@@ -105,7 +133,7 @@ class Scraper
                                        item.css('div.played').text,
                                        item.css('a.title').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:orbitalstore] = @listing.products.size > results_before_search
   end
 
   def grupodecme
@@ -118,7 +146,7 @@ class Scraper
                                        item.css('span.visually-hidden')[1].text,
                                        (distributors[:grupodecme] + item['href']))
     end
-    @listing.products.size > results_before_search
+    @results_register[:grupodecme] = @listing.products.size > results_before_search
   end
 
   def digitalife
@@ -131,7 +159,7 @@ class Scraper
                                        item.css('div.precioFlag').text,
                                        item.css('a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:digitalife] = @listing.products.size > results_before_search
   end
 
   def pcel
@@ -148,7 +176,7 @@ class Scraper
                                        item.css('span.price-new').text,
                                        item.css('div.name a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:pcel] = @listing.products.size > results_before_search
   end
 
   def zegucom
@@ -158,10 +186,10 @@ class Scraper
     results_page = webpage.forms.first.submit
     results_page.css('div.search-result').each do |item|
       @listing.products << Product.new(item.css('div.result-description a').text,
-                                       item.css('span.result-price-search').text,
+                                       item.css('span.result-price-search').text[0...10],
                                        (distributors[:zegucom] + item.css('a')[1]['href']))
     end
-    @listing.products.size > results_before_search
+    @results_register[:zegucom] = @listing.products.size > results_before_search
   end
 
   def pcmig
@@ -174,7 +202,7 @@ class Scraper
                                        item.css('span.woocommerce-Price-amount').first.text,
                                        item.css('a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:pcmig] = @listing.products.size > results_before_search
   end
 
   def highpro
@@ -187,7 +215,7 @@ class Scraper
                                        item.css('div.product-price-and-shipping').text,
                                        item.css('a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:highpro] = @listing.products.size > results_before_search
   end
 
   def pcdigital
@@ -202,7 +230,7 @@ class Scraper
                                        item.css('span.price-new').text,
                                        item.css('div.name a').first['href'])
     end
-    @listing.products.size > results_before_search
+    @results_register[:pcdigital] = @listing.products.size > results_before_search
   end
 
   def intercompras
@@ -215,11 +243,7 @@ class Scraper
                                        item.css('div.divProductListPrice').text,
                                        item.css('a').first['href'])
     end
-    @listing.products.size > results_before_search
-  end
-
-  def show_distributors
-    @distributors
+    @results_register[:intercompras] = @listing.products.size > results_before_search
   end
 end
-# rubocop:enable Metrics/ClassLength
+# rubocop: enable Metrics/ClassLength

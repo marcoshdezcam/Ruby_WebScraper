@@ -7,6 +7,8 @@ class Product
     @url = url
   end
 
+  private
+
   def clean_string(string)
     string.tr!("\t", '')
     string.tr!("\n", ',')

@@ -6,24 +6,21 @@ It works by searching for specific keywords of PC Hardware on the biggest Méxic
 Mechanize with Nokogiri as dependency was used to fill search forms. And, Selenium to scrape websites (like Amazon) that require a real browser to visit their shop.
 
 This is the list of distributors: 
-- MercadoLibre.com.mx
-- Cyberpuerta.mx
-- MiPC.com.mx
-- Orbitalstore.mx
-- Grupodecme.com
-- Dimercom.mx
-- Digitalife.com.mx
-- PCel.com
-- Zegucom.com.mx
-- PCMig.com.mx
-- HighPro.com.mx
-- PCDigital.com.mx
-- Intercompras.com
 
-<img align="left" width="50" height="50" src="./img/icon.png" alt="UML Icon" border="0">
+	- MercadoLibre.com.mx
+	- Cyberpuerta.mx
+	- MiPC.com.mx
+	- Orbitalstore.mx
+	- Grupodecme.com
+	- Dimercom.mx
+	- Digitalife.com.mx
+	- PCel.com
+	- Zegucom.com.mx
+	- PCMig.com.mx
+	- HighPro.com.mx
+	- PCDigital.com.mx
+	- Intercompras.com
 
-## UML
-![UML_Classes](./img/UML_Classes.png)
 
 ## 🔧 Built With
 
@@ -34,83 +31,53 @@ This is the list of distributors:
 - [Selenium Webdriver](https://github.com/SeleniumHQ/selenium/tree/trunk/rb)
 - [Simplecov](https://github.com/simplecov-ruby/simplecov)
 
+<img align="left" width="50" height="50" src="./img/icon.png" alt="UML Icon" border="0">
+
+## UML
+![UML_Classes](./img/UML_Classes.png)
+
 ## 🛠  Getting Started
 
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
+Depending on your distribution and, therefore your package manager, this commands may change. Here, Ubuntu is used as an example. 
+
+- Ruby 2.7.x
+
 ##### ChromeDriver (required by Selenium WebDriver)
-		 sudo apt-get install chromium-chromedriver
+		 
+	sudo apt-get install chromium-chromedriver
 
-##### Install gcc compiler (required by Mechanize dependencies)
-		sudo apt install build-essential
-
-##### Ruby
-If you don't have Ruby installed, follow the next steps:
-* Depending on your distribution and, therefore your package manager, this commands may change. Here, Ubuntu is used as an example. 
-
-- Update your system
-		sudo apt update
-		sudo apt upgrade
-
-- Install libraries and dependencies:
-		sudo apt install gcc make libssl-dev libreadline-dev zlib1g-dev libsqlite3-dev
-
-- Install rbenv
-		git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-
-- Add rbemv to your PATH
-		echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-		echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-		exit
-
-- After the last step you need to open a new terminal to load the new PATH variables and run: 
-		mkdir -p "$(rbenv root)"/plugins
-		git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
-
-- Finally, to make sure rbenv is installed, run:
-		rbenv -v
+##### Install dependencies required by Mechanize
 		
-- Install Ruby
-		rbenv install 2.7.0 --verbose
-
-- Verify everything is working and set global Ruby version as 2.7.0
-		rbenv global 2.7.0
-
-- Verify Ruby version
-		ruby -v
+	sudo apt install build-essential
 
 ### Setup
-####Install required gems for this project
-This command will install Mechanize, Selenium WebDriver, Rspec, Rubocop and Simplecov gems:
-		bundle install
 
+#### Clone Github repository
 
-### Usage
-Include the following line at the top of your file:
+	git clone https://github.com/marcoshdezcam/Ruby_WebScraper.git
 
-		require './lib/scraper.rb'
+#### Install required gems for this project
+After cloning the repository, go to the directory where you downloaded it and run: 
 
-Using 'RAM 16GB' as a search example. Run the scraper with the following: 
+	bundle install
 
-		web_scraper = Scraper.new('RAM 16GB')
-		web_scraper.search
+### How to start
 
-All search results will be saved on Scraper.Listing.products
+To run a search on all distributors just run the next command: 
 
-		web_scraper.listing.products
+	ruby ./bin/main.rb
 
-Show the 30 cheapest products found:
-		
-		web_scraper.listing.find_cheapest
+### Tests 
 
-
-### Run tests
 To run the tests just use the following command:
 
-		rspec
+	rspec
 
-#### Simplecov report:
+#### Test coverage report:
+
 ![Test report](./img/test_report.png)
 
 ## ✒️ Author
