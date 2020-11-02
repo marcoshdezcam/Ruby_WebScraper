@@ -1,0 +1,6 @@
+*.mdj
+
+# Distributors
+config/
+
+coverage/
